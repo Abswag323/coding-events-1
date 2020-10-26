@@ -3,6 +3,7 @@ package org.launchcode.codingevents.controllers;
 import org.launchcode.codingevents.data.EventCategoryRepository;
 import org.launchcode.codingevents.data.EventRepository;
 import org.launchcode.codingevents.models.Event;
+import org.launchcode.codingevents.models.EventCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 /**
  * Created by Chris Bay
@@ -26,9 +28,21 @@ public class EventController {
 
 
     @GetMapping
-    public String displayAllEvents(Model model) {
-        model.addAttribute("title", "All Events");
-        model.addAttribute("events", eventRepository.findAll());
+    public String displayAllEvents(@RequestParam(required = false) Integer categoryID, Model model) {
+
+        if (categoryID == null) {
+            model.addAttribute("title", "All Events");
+            model.addAttribute("events", eventRepository.findAll());
+        } else {
+            Optional<EventCategory> result = eventCategoryRepository.findById(categoryID);
+            if (result.isEmpty()) {
+                model.addAttribute("title", "Invalid Category ID: " + categoryID);
+            } else {
+                EventCategory category = result.get();
+                model.addAttribute("title", "Events in category: " + category.getName());
+                model.addAttribute("events", category.getEvents());
+            }
+        }
 
         return "events/index";
     }
@@ -69,25 +83,6 @@ public class EventController {
         return "redirect:";
     }
 
-//    @GetMapping("edit/{eventId}")
-//    public String displayEditForm(Model model, @PathVariable int eventId) {
-//        //controller code will go here
-//        Event event = EventData.getByID(eventId);
-//        model.addAttribute("event", event);
-//        if (event != null) {
-//            model.addAttribute("title", "Edit Event " + event.getName() + " (ID = " + event.getId() + ")");
-//        }
-//
-//        return "events/edit";
-//    }
-//
-//    @PostMapping("edit")
-//    public String processEditForm(int eventId, String name, String description) {
-//        Event event = EventData.getByID(eventId);
-//        event.setName(name);
-//        event.setDescription(description);
-//        return "redirect:";
-//    }
 
 
 }

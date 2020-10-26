@@ -18,26 +18,14 @@ public class Event extends AbstractEntity {
     @Email(message = "Invalid email. Try again.")
     private String contactEmail;
 
-    @NotBlank(message="Location is required")
-    private String location;
-
-    @AssertTrue(message="Must be true")
-    private boolean mustRegister;
-
-    @Min(value = 1, message = "Must have at least 1 attendee")
-    private Integer numAttendees;
-
     @ManyToOne
     @NotNull(message = "Category is required")
     private EventCategory eventCategory;
 
-    public Event (String name, String description, String contactEmail, String location, Boolean mustRegister, Integer numAttendees, EventCategory eventCategory) {
+    public Event (String name, String description, String contactEmail, EventCategory eventCategory) {
         this.name = name;
         this.description = description;
         this.contactEmail = contactEmail;
-        this.location = location;
-        this.mustRegister = mustRegister;
-        this.numAttendees = numAttendees;
         this.eventCategory = eventCategory;
     }
 
@@ -66,30 +54,6 @@ public class Event extends AbstractEntity {
 
     public void setContactEmail(String contactEmail) {
         this.contactEmail = contactEmail;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public Boolean getMustRegister() {
-        return mustRegister;
-    }
-
-    public void setMustRegister(Boolean mustRegister) {
-        this.mustRegister = mustRegister;
-    }
-
-    public Integer getNumAttendees() {
-        return numAttendees;
-    }
-
-    public void setNumAttendees(Integer numAttendees) {
-        this.numAttendees = numAttendees;
     }
 
     public EventCategory getEventCategory() {
